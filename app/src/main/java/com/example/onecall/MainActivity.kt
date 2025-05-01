@@ -19,6 +19,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.runtime.*
+import androidx.compose.foundation.text.*
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +30,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             OneCallTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = "home") {
+                NavHost(navController = navController, startDestination = "landing") {
+                    composable("landing") { LandingScreen(navController) }
+                    composable("login") { LoginScreen(navController) }
+                    composable("signup") { SignupScreen(navController) }
                     composable("home") { OneCallHomeScreen(navController) }
                     composable("garage") { ServiceScreen("Garage Services") }
                     composable("hospital") { ServiceScreen("Hospital Services") }
@@ -38,13 +45,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun OneCallHomeScreen(navController: NavHostController) {
     val services = listOf(
-        Triple("Garage", Color.Yellow, "garage"),
-        Triple("Hospital", Color.Blue, "hospital"),
-        Triple("Fire", Color.Red, "fire"),
-        Triple("Police", Color.Gray, "police")
+        Triple("Garage", Color(0xFF4CAF50), "garage"),
+        Triple("Hospital", Color(0xFFADD8E6), "hospital"),
+        Triple("Fire", Color(0xFFFFA500), "fire"),
+        Triple("Police", Color(0xFFBDBDBD), "police")
     )
 
     Column(
@@ -119,3 +127,104 @@ fun OneCallPreview() {
         OneCallHomeScreen(navController)
     }
 }
+
+@Composable
+fun LandingScreen(navController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Welcome to OneCall",
+            fontSize = 30.sp,
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 30.dp)
+        )
+
+        Button(
+            onClick = { navController.navigate("login") },
+            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+        ) {
+            Text(text = "Login")
+        }
+
+        Button(
+            onClick = { navController.navigate("signup") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Sign Up")
+        }
+    }
+}
+
+
+@Composable
+fun LoginScreen(navController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Login", fontSize = 24.sp, color = Color.Black)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(value = "", onValueChange = {}, label = { Text("Email") })
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(value = "", onValueChange = {}, label = { Text("Password") })
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = { navController.navigate("home") }) {
+            Text("Login")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Don't have an account? Sign Up",
+            color = Color.Blue,
+            modifier = Modifier.clickable { navController.navigate("signup") }
+        )
+    }
+}
+
+@Composable
+fun SignupScreen(navController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Sign Up", fontSize = 24.sp, color = Color.Black)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(value = "", onValueChange = {}, label = { Text("Full Name") })
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(value = "", onValueChange = {}, label = { Text("Email") })
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(value = "", onValueChange = {}, label = { Text("Password") })
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = { navController.navigate("home") }) {
+            Text("Sign Up")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Already have an account? Login",
+            color = Color.Blue,
+            modifier = Modifier.clickable { navController.navigate("login") }
+        )
+    }
+}
+
+
